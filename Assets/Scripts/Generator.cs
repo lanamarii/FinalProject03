@@ -9,6 +9,13 @@ public class Generator : MonoBehaviour
     [SerializeField][Tooltip("The object you want to be spawned into the scene")]
     public GameObject ObjectSpawned;
 
+    [Header("Timer")]
+
+    [SerializeField][Tooltip("How long Object(s) should be spawned in")]
+    public float SpawnInterval = 5;
+
+    private float UnityTimer;
+
     [Header("Bounding Box Parameters")]
     [SerializeField]
     public float minX = -10;
@@ -31,10 +38,32 @@ public class Generator : MonoBehaviour
        // Instantiate(ObjectSpawned, randomPosition, Quaternion.identity);
     }
 
+    private void Update()
+    {
+        UnityTimer += Time.deltaTime;
+
+        if(UnityTimer >= SpawnInterval)
+        {
+            ResetPositions();
+
+            UnityTimer = 0;
+        }
+    }
+
     public void RandomSpawn()
     {
         var SpawnPosition = new Vector3(Random.Range(minX, maxX), Random.Range(minY, maxY), Random.Range(minZ, maxZ));
 
         Instantiate(ObjectSpawned, SpawnPosition, Quaternion.identity);
+    }
+
+    public void ResetPositions()
+    {
+        var newPosition = new Vector3(Random.Range(minX, maxX), Random.Range(minY, maxY), Random.Range(minZ, maxZ));
+
+        if(ObjectSpawned != null)
+        {
+            ObjectSpawned.transform.position = newPosition;
+        }
     }
 }
