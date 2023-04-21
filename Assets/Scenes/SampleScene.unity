@@ -370,12 +370,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ObjectSpawned: {fileID: 1527732990}
   SpawnInterval: 5
-  minX: -10
-  maxX: 20
-  minY: 0
-  maxY: 2
-  minZ: -10
-  maxZ: 20
+  BoxCenter: {x: 0, y: 4.22, z: 0}
+  BoxSize: {x: 44.15, y: 8.28, z: 51.7}
 --- !u!4 &400205924
 Transform:
   m_ObjectHideFlags: 0

@@ -9,6 +9,8 @@ public class Generator : MonoBehaviour
     [SerializeField][Tooltip("The object you want to be spawned into the scene")]
     public GameObject ObjectSpawned;
 
+    private GameObject _object;
+
     [Header("Timer")]
 
     [SerializeField][Tooltip("How long Object(s) should be spawned in")]
@@ -17,25 +19,27 @@ public class Generator : MonoBehaviour
     private float UnityTimer;
 
     [Header("Bounding Box Parameters")]
-    [SerializeField]
-    public float minX = -10;
-    public float maxX = 10;
-    public float minY = 10;
-    public float maxY = 20;
-    public float minZ = -10;
-    public float maxZ = -10;
 
+    //min boundary variables for gizmo calculation
+
+    [SerializeField] [Tooltip("Where the center of the bounding box is located in the scene")]
+    public Vector3 BoxCenter;
+    [SerializeField][Tooltip("Size of Bounding Box")]
+    public Vector3 BoxSize;
 
     public void Awake()
     {
         RandomSpawn();
+
     }
     private void OnDrawGizmosSelected()
     {
-        // Gizmos.DrawWireCube()
+      
 
-        //on void awake it should call spawn function
-       // Instantiate(ObjectSpawned, randomPosition, Quaternion.identity);
+        //draw a visual representation for min distance
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(BoxCenter, BoxSize);
+    
     }
 
     private void Update()
@@ -52,18 +56,18 @@ public class Generator : MonoBehaviour
 
     public void RandomSpawn()
     {
-        var SpawnPosition = new Vector3(Random.Range(minX, maxX), Random.Range(minY, maxY), Random.Range(minZ, maxZ));
+        var SpawnPosition = BoxCenter + new Vector3(Random.Range(-BoxSize.x / 2, BoxSize.x / 2), Random.Range(-BoxSize.y / 2, BoxSize.y / 2), Random.Range(-BoxSize.z / 2, BoxSize.z / 2));
 
-        Instantiate(ObjectSpawned, SpawnPosition, Quaternion.identity);
+        _object = Instantiate(ObjectSpawned, SpawnPosition, Quaternion.identity);
     }
 
     public void ResetPositions()
     {
-        var newPosition = new Vector3(Random.Range(minX, maxX), Random.Range(minY, maxY), Random.Range(minZ, maxZ));
+        var newPosition = BoxCenter + new Vector3(Random.Range(-BoxSize.x / 2, BoxSize.x / 2), Random.Range(-BoxSize.y / 2, BoxSize.y / 2), Random.Range(-BoxSize.z / 2, BoxSize.z / 2));
 
-        if(ObjectSpawned != null)
+        if (_object != null)
         {
-            ObjectSpawned.transform.position = newPosition;
+            _object.transform.position = newPosition;
         }
     }
 }
