@@ -9,7 +9,12 @@ public class Generator : MonoBehaviour
     [SerializeField][Tooltip("The object you want to be spawned into the scene")]
     public GameObject ObjectSpawned;
 
-    private GameObject _object;
+    [SerializeField]
+    [Tooltip("Number of objects to spawn")]
+    public int NumberOfObjects = 1;
+
+    //array for game objects spawning
+    private GameObject[] _objects;
 
     [Header("Timer")]
 
@@ -39,7 +44,7 @@ public class Generator : MonoBehaviour
     {
       
 
-        //draw a visual representation for min distance
+        //draw a visual representation of bounding box for user to see
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(BoxCenter, BoxSize);
     
@@ -63,20 +68,33 @@ public class Generator : MonoBehaviour
     public void RandomSpawn()
     {
 
-        //gizmo box parameters for user to see in scene
-        var SpawnPosition = BoxCenter + new Vector3(Random.Range(-BoxSize.x / 2, BoxSize.x / 2), Random.Range(-BoxSize.y / 2, BoxSize.y / 2), Random.Range(-BoxSize.z / 2, BoxSize.z / 2));
+        //adding a new object to the array, based off the amount of objects the user wants to spawn in 
+        _objects = new GameObject[NumberOfObjects];
+        for (int i = 0; i < NumberOfObjects; i++)
+        {
 
-        //spawn a new object
-        _object = Instantiate(ObjectSpawned, SpawnPosition, Quaternion.identity);
+            //gizmo box parameters used to determine where the objects can be randomly generated in 
+            var SpawnPosition = BoxCenter + new Vector3(Random.Range(-BoxSize.x / 2, BoxSize.x / 2), Random.Range(-BoxSize.y / 2, BoxSize.y / 2), Random.Range(-BoxSize.z / 2, BoxSize.z / 2));
+
+            //spawn a new object
+            _objects[i] = Instantiate(ObjectSpawned, SpawnPosition, Quaternion.identity);
+        }
     }
 
     public void ResetPositions()
     {
-        var newPosition = BoxCenter + new Vector3(Random.Range(-BoxSize.x / 2, BoxSize.x / 2), Random.Range(-BoxSize.y / 2, BoxSize.y / 2), Random.Range(-BoxSize.z / 2, BoxSize.z / 2));
-
-        if (_object != null)
+        for (int i = 0; i < _objects.Length; i++)
         {
-            _object.transform.position = newPosition;
+
+            //creates new position for the object(s) to move 
+            var newPosition = BoxCenter + new Vector3(Random.Range(-BoxSize.x / 2, BoxSize.x / 2), Random.Range(-BoxSize.y / 2, BoxSize.y / 2), Random.Range(-BoxSize.z / 2, BoxSize.z / 2));
+
+
+            //if object(s) are not destroyed, they can move positions
+            if (_objects[i] != null)
+            {
+                _objects[i].transform.position = newPosition;
+            }
         }
     }
 
