@@ -13,8 +13,11 @@ public class Generator : MonoBehaviour
 
     [Header("Timer")]
 
-    [SerializeField][Tooltip("How long Object(s) should be spawned in")]
-    public float SpawnInterval = 5;
+    [SerializeField][Tooltip("How long the object will stay in the same position")]
+    public float MoveInterval = 5;
+
+    [SerializeField][Tooltip("Would you like the object to move after a set time?")]
+    bool MoveObject = true;
 
     private float UnityTimer;
 
@@ -44,20 +47,26 @@ public class Generator : MonoBehaviour
 
     private void Update()
     {
+
+        //setting timer to real time
         UnityTimer += Time.deltaTime;
 
-        if(UnityTimer >= SpawnInterval)
+        //if MoveObject is true and timer is greater than set time, object will move
+        if(UnityTimer >= MoveInterval && MoveObject == true)
         {
             ResetPositions();
 
-            UnityTimer = 0;
+            ResetTimer();
         }
     }
 
     public void RandomSpawn()
     {
+
+        //gizmo box parameters for user to see in scene
         var SpawnPosition = BoxCenter + new Vector3(Random.Range(-BoxSize.x / 2, BoxSize.x / 2), Random.Range(-BoxSize.y / 2, BoxSize.y / 2), Random.Range(-BoxSize.z / 2, BoxSize.z / 2));
 
+        //spawn a new object
         _object = Instantiate(ObjectSpawned, SpawnPosition, Quaternion.identity);
     }
 
@@ -69,5 +78,10 @@ public class Generator : MonoBehaviour
         {
             _object.transform.position = newPosition;
         }
+    }
+
+    public void ResetTimer()
+    {
+        UnityTimer = 0;
     }
 }
